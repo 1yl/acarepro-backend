@@ -1,0 +1,13 @@
+DB_USER = 'keqi'
+DB_PASSWORD = 'Mes1234@'
+DB_HOST = '47.103.34.10'
+DB_DB = 'acarepro'
+DB_PORT = 3306
+
+DEBUG = True
+PORT = 5000
+HOST = "0.0.0.0"
+SECRET_KEY = "my blog"
+
+# SQLALCHEMY_TRACK_MODIFICATIONS = False
+# SQLALCHEMY_DATABASE_URI = 'mysql://' + DB_USER + ':' + DB_PASSWORD + '@' + DB_HOST + '/' + DB_DB
