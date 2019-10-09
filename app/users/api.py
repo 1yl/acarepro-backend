@@ -28,14 +28,73 @@ def init_api(app):
         :return: json
         """
         result = Auth.identify(Auth, request)
-        # print(result)
+        print(result)
         if (result['status'] and result['data']):
             user = Users.get(Users, result['data'])
+            print(user)
             returnUser = {
                 'id': user[0]["id"],
-                'insurance_number': user[0]["insurance_number"],
+                'insurance_id': user[0]["insurance_id"],
                 'phone': user[0]["phone"],
                 'login_time': user[0]["login_time"]
             }
             result = common.trueReturn(returnUser, "请求成功")
         return jsonify(result)
+
+
+    @app.route('/booking/drunk_driver')
+    def driver():
+        """
+        酒后代驾信息填写
+        :return: json
+        """
+        result = Auth.identify(Auth, request)
+        # service_id = request.json.get('service_id')
+        data_json = request.json.get('data_json')
+        # phone = request.json.get('phone')
+        print(result)
+        if (result['status'] and result['data']):
+            user = Users.get(Users, result['data'])
+            print(user)
+            # 根据token用户保单号查询该用户增值服务次数/用户id查询
+            # user[0][""]
+            data = {
+                # service_list表中服务id（代驾-4）
+                "service_id": 4,
+                "user_id": user[0]["id"],
+                "insurance_coy_id": user[0]["insurance_coy_id"],
+                "order_detail": data_json
+            }
+            FlaskAPI.insert_data(data=data, table="booking_service")
+            returnUser = {
+                'id': user[0]["id"],
+                'insurance_id': user[0]["insurance_id"],
+                'phone': user[0]["phone"],
+                'login_time': user[0]["login_time"]
+            }
+            res = FlaskAPI.insert_data(data)
+            if res == "success":
+                result = common.trueReturn(returnUser, "代驾信息提交完成")
+            else:
+                result = common.trueReturn(returnUser, "代驾信息提交失败")
+        return jsonify(result)
+
+
+    # @app.route('/service_list', methods=['GET'])
+    # def get():
+    #     """
+    #     获取列表服务（非预约服务/预约类服务）
+    #     :return: json
+    #     """
+    #     result = Auth.identify(Auth, request)
+    #     # print(result)
+    #     if (result['status'] and result['data']):
+    #         user = Users.get(Users, result['data'])
+    #         returnUser = {
+    #             'id': user[0]["id"],
+    #             'insurance_number': user[0]["insurance_number"],
+    #             'phone': user[0]["phone"],
+    #             'login_time': user[0]["login_time"]
+    #         }
+    #         result = common.trueReturn(returnUser, "请求成功")
+    #     return jsonify(result)

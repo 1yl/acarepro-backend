@@ -64,6 +64,7 @@ class Auth():
         # 查找该用户是否存在
         # userInfo = Users.query.filter_by(username=username).first()
         userInfo = FlaskAPI.filter_user(data1=name, data2=phone, data3=car_plate_number)
+        # print(userInfo)
         if (userInfo == 'user is not exist'):
             return jsonify(common.falseReturn('', '找不到用户'))
         else:
