@@ -23,6 +23,9 @@ class Users():
 
     def check_password(self, hash, password):
         # generate_password_hash(password)
+        print(hash)
+        print(password)
+        print(check_password_hash(hash, password))
         return check_password_hash(hash, password)
 
     def get(self, id):

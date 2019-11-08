@@ -1,6 +1,6 @@
-DB_USER = 'keqi'
-DB_PASSWORD = 'Mes1234@'
-DB_HOST = '47.103.34.10'
+DB_USER = 'root'
+DB_PASSWORD = 'acarepro2019'
+DB_HOST = '119.3.150.173'
 DB_DB = 'acarepro'
 DB_PORT = 3306
 

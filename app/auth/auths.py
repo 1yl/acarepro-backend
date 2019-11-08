@@ -55,7 +55,7 @@ class Auth():
             return '无效Token'
 
 
-    def authenticate(self, name, phone, car_plate_number):
+    def authenticate(self, name, inc_vin, insurance_id, company_id):
         """
         用户登录，登录成功返回token，写将hash_auth写入数据库；登录失败返回失败原因
         :param password:
@@ -63,24 +63,32 @@ class Auth():
         """
         # 查找该用户是否存在
         # userInfo = Users.query.filter_by(username=username).first()
-        userInfo = FlaskAPI.filter_user(data1=name, data2=phone, data3=car_plate_number)
-        # print(userInfo)
-        if (userInfo == 'user is not exist'):
+        userInfo1 = FlaskAPI.filter_user(data1=name, data2=inc_vin, data3=insurance_id, data4=company_id)
+        if (userInfo1 == 'user is not exist'):
             return jsonify(common.falseReturn('', '找不到用户'))
         else:
-            hash_auth = generate_password_hash(phone)
-            res = FlaskAPI.save_hash(hash_auth, phone)
+            hash_auth = generate_password_hash(inc_vin)
+            res = FlaskAPI.save_hash(hash_auth, inc_vin)
             if res == 'update success':
-                if (Users.check_password(Users, userInfo[0]["hash_auth"], phone)):
+                # print(userInfo)
+                userInfo = FlaskAPI.filter_user(data1=name, data2=inc_vin, data3=insurance_id, data4=company_id)
+                # 333
+                if (Users.check_password(Users, userInfo[0]["hash_auth"], inc_vin)):
                     login_time = str(int(time.time()))
-                    save_status = FlaskAPI.save_login_time(login_time, phone)
+                    save_status = FlaskAPI.save_login_time(login_time, inc_vin)
                     if save_status == 'update success':
                     # userInfo.login_time = login_time
                     # Users.update(Users)
                         token = self.encode_auth_token(userInfo[0]["id"], login_time)
+                        # 查看用户信息是否完善
+                        state = FlaskAPI.filter_info_complete(userInfo[0]["id"])
+                        dic = {
+                            "token": token.decode(),
+                            "state": state[0]["inc_state"]
+                        }
                         # session["auth_token"] = token
                         # print(session["auth_token"])
-                        return jsonify(common.trueReturn(token.decode(), '登录成功'))
+                        return jsonify(common.trueReturn(dic, '登录成功'))
                     else:
                         return jsonify(common.falseReturn('', '添加token时间失败'))
                 else:
